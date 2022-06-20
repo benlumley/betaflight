@@ -716,7 +716,7 @@ static void osdElementUpDownReference(osdElementParms_t *element)
 // Up/Down reference feature displays reference points on the OSD at Zenith and Nadir
     const float earthUpinBodyFrame[3] = {-rMat[2][0], -rMat[2][1], -rMat[2][2]}; //transforum the up vector to the body frame
 
-    if (ABS(earthUpinBodyFrame[2]) < SINE_25_DEG && ABS(earthUpinBodyFrame[1]) < SINE_25_DEG) { 
+    if (ABS(earthUpinBodyFrame[2]) < SINE_25_DEG && ABS(earthUpinBodyFrame[1]) < SINE_25_DEG) {
         float thetaB; // pitch from body frame to zenith/nadir
         float psiB; // psi from body frame to zenith/nadir
         char *symbol[2] = {"U", "D"}; // character buffer
@@ -1479,12 +1479,19 @@ static void osdElementWarnings(osdElementParms_t *element)
 static void osdElementWarnings2(osdElementParms_t *element)
 {
     osdElementWarnings(element);
-
+    int osdProfileIndex = 1;
     if (blinkState || (strlen(element->buff) == 0)) {
         osdElementLinkQuality(element);
+        osdProfileIndex = 0;
     }
 
     strncpy(pilotConfigMutable()->name, element->buff, 12);
+
+    if (getCurrentOsdProfileIndex() != osdProfileIndex)
+    {
+        changeOsdProfileIndex(osdProfileIndex);
+    }
+
     return;
 }
 
